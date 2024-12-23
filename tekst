@@ -1,0 +1,111 @@
+"use client";
+import { useState } from "react";
+
+const data = [
+  { value: "AC", style: "operator", size: "big-vertical" },
+  { value: "*", style: "operator" },
+  { value: "/", style: "operator" },
+  { value: 1 },
+  { value: 2 },
+  { value: 3 },
+  { value: "-", style: "operator" },
+  { value: 4 },
+  { value: 5 },
+  { value: 6 },
+  { value: "+", style: "operator" },
+  { value: 7 },
+  { value: 8 },
+  { value: 9 },
+  { value: "=", style: "operator", size: "big-horizontal" },
+  { value: 0 },
+];
+
+export default function Home() {
+  const [value, setValue] = useState("");
+  const [result, setResult] = useState("");
+
+  const handleButtonClick = (event) => {
+    const buttonValue = event.target.innerText;
+    if (buttonValue === "=") {
+      try {
+        setResult(eval(value).toString());
+      } catch (e) {
+        setValue(e.message);
+      }
+    } else if (buttonValue === "AC") {
+      setValue("");
+      setResult("");
+    } else {
+      setValue(value + buttonValue);
+    }
+  };
+
+  const NumberButton = ({ number }: { number: string }) => (
+    <div
+      onClick={handleButtonClick}
+      className="flex justify-center items-center size-16 bg-number-gradient rounded-md text-3xl text-white hover:bg-number-hover  cursor-pointer transition-colors"
+    >
+      {number}
+    </div>
+  );
+
+  const OperatorButton = ({ operator }: { operator: string }) => (
+    <div
+      onClick={handleButtonClick}
+      className="flex justify-center items-center size-16 bg-operator-gradient rounded-md text-3xl text-white hover:bg-operator-hover cursor-pointer transition-colors"
+    >
+      {operator}
+    </div>
+  );
+
+  return (
+    <main className="w-full h-svh flex justify-center items-center">
+      <div className=" w-[390px] h-[720px] bg-container-gradient rounded-2xl shadow-[0_2px_30px_-50px_hsla(225,33%,98%,40%)] justify-end items-center flex flex-col pb-12">
+        <div className="w-[312px] mb-8">
+          <p className="w-full text-[#4799D1] text-4xl text-right">{value}</p>
+          <p className="w-full h-12 text-[#1475B8] text-5xl text-right">
+            {result}
+          </p>
+        </div>
+        <div className="grid grid-cols-4 gap-4">
+          <div
+            onClick={handleButtonClick}
+            className="flex justify-center items-center size-16 w-[148px] bg-operator-gradient rounded-md text-3xl text-white col-span-2 hover:bg-operator-hover cursor-pointer transition-colors"
+          >
+            AC
+          </div>
+          <OperatorButton operator="*" />
+          <OperatorButton operator="/" />
+
+          <NumberButton number="1" />
+          <NumberButton number="2" />
+          <NumberButton number="3" />
+          <OperatorButton operator="-" />
+
+          <NumberButton number="4" />
+          <NumberButton number="5" />
+          <NumberButton number="6" />
+          <OperatorButton operator="+" />
+
+          <NumberButton number="7" />
+          <NumberButton number="8" />
+          <NumberButton number="9" />
+          <div
+            onClick={handleButtonClick}
+            className="flex justify-center items-center size-16 h-[148px] bg-operator-gradient rounded-md text-3xl text-white row-span-2 hover:bg-operator-hover cursor-pointer transition-colors"
+          >
+            =
+          </div>
+
+          <div
+            onClick={handleButtonClick}
+            className="flex justify-center items-center size-16 w-[148px] bg-number-gradient rounded-md text-3xl text-white col-span-2 hover:bg-number-hover  cursor-pointer transition-colors"
+          >
+            0
+          </div>
+          <NumberButton number="." />
+        </div>
+      </div>
+    </main>
+  );
+}

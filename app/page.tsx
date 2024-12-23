@@ -1,101 +1,94 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
+
+const data = [
+  { value: "AC", style: "operator", size: "big-vertical" },
+  { value: "*", style: "operator" },
+  { value: "/", style: "operator" },
+  { value: 1 },
+  { value: 2 },
+  { value: 3 },
+  { value: "-", style: "operator" },
+  { value: 4 },
+  { value: 5 },
+  { value: 6 },
+  { value: "+", style: "operator" },
+  { value: 7 },
+  { value: 8 },
+  { value: 9 },
+  { value: "=", style: "operator", size: "big-horizontal" },
+  { value: 0, size: "big-vertical" },
+  { value: "." },
+];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [value, setValue] = useState("");
+  const [result, setResult] = useState("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleButtonClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const buttonValue = (event.target as HTMLDivElement).innerText;
+    if (buttonValue === "=") {
+      try {
+        setResult(eval(value).toString());
+      } catch (e: unknown) {
+        setValue((e as Error).message);
+      }
+    } else if (buttonValue === "AC") {
+      setValue("");
+      setResult("");
+    } else {
+      setValue(value + buttonValue);
+    }
+  };
+
+  return (
+    <main className="w-full h-svh flex justify-center items-center">
+      <div className=" w-[390px] h-[720px] bg-container-gradient rounded-2xl shadow-[0_2px_30px_-50px_hsla(225,33%,98%,40%)] justify-end items-center flex flex-col pb-12">
+        <div className="w-[312px] mb-8">
+          <p className="w-full text-[#4799D1] text-4xl text-right">{value}</p>
+          <p className="w-full h-12 text-[#1475B8] text-5xl text-right">
+            {result}
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        <div className="grid grid-cols-4 gap-4">
+          {data.map((item) => {
+            if (item.style === "operator") {
+              return (
+                <div
+                  key={item.value}
+                  onClick={handleButtonClick}
+                  className={`flex justify-center items-center size-16 ${
+                    item.size === "big-vertical"
+                      ? "w-[148px] col-span-2"
+                      : item.size === "big-horizontal"
+                      ? "h-[148px] row-span-2"
+                      : ""
+                  } bg-operator-gradient rounded-md text-3xl text-white hover:bg-operator-hover cursor-pointer transition-colors`}
+                >
+                  {item.value}
+                </div>
+              );
+            } else {
+              return (
+                <div
+                  key={item.value}
+                  onClick={handleButtonClick}
+                  className={`flex justify-center items-center size-16
+                  ${
+                    item.size === "big-vertical"
+                      ? "w-[148px] col-span-2"
+                      : item.size === "big-horizontal"
+                      ? "h-[148px] row-span-2"
+                      : ""
+                  } bg-number-gradient rounded-md text-3xl text-white hover:bg-number-hover  cursor-pointer transition-colors`}
+                >
+                  {item.value}
+                </div>
+              );
+            }
+          })}
+        </div>
+      </div>
+    </main>
   );
 }
