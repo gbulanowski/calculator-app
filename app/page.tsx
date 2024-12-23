@@ -47,7 +47,7 @@ export default function Home() {
         <div className="w-[312px] mb-8">
           <p className="w-full text-[#4799D1] text-4xl text-right">{value}</p>
           <p className="w-full h-12 text-[#1475B8] text-5xl text-right">
-            {result}
+            {Math.floor(Number(result) * 100) / 100}
           </p>
         </div>
         <div className="grid grid-cols-4 gap-4">
